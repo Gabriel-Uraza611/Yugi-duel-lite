@@ -13,8 +13,7 @@ import java.net.http.HttpResponse;
 
 public class YgoApiClient
 {
-    public Card obtenerCartaAleatoria() throws IOException, InterruptedException
-    {
+    public Card obtenerCartaAleatoria() throws IOException, InterruptedException {
         // Crea un cliente HTTP para hacer las peticiones
         HttpClient client = HttpClient.newBuilder()
                 .followRedirects(HttpClient.Redirect.NORMAL)
@@ -32,18 +31,15 @@ public class YgoApiClient
         );
 
         // Comprueba si la petición fue exitosa
-        if (response.statusCode() == 200)
-        {
+        if (response.statusCode() == 200) {
             // Convierte la respuesta en un objeto JSON
             JSONObject json = new JSONObject(response.body());
 
             // Comprueba si los datos vienen dentro de "data"
-            if (json.has("data"))
-            {
+            if (json.has("data")) {
                 JSONArray datos = json.getJSONArray("data");
 
-                if (datos.length() == 0)
-                {
+                if (datos.length() == 0) {
                     throw new IOException("La API no devolvió ninguna carta");
                 }
 
@@ -51,8 +47,7 @@ public class YgoApiClient
             }
 
             // Comprueba que exista el tipo de carta
-            if (!json.has("type"))
-            {
+            if (!json.has("type")) {
                 System.out.println("Respuesta de la API: " + response.body());
                 throw new IOException("La respuesta no contiene el tipo de carta");
             }
@@ -61,8 +56,7 @@ public class YgoApiClient
             String tipo = json.getString("type");
 
             // Comprueba que sea un monstruo
-            if (!tipo.contains("Monster"))
-            {
+            if (!tipo.contains("Monster")) {
                 return obtenerCartaAleatoria();
             }
 
@@ -79,8 +73,7 @@ public class YgoApiClient
             // Crea y devuelve el objeto Card
             return new Card(nombre, atk, def, imageUrl);
         }
-        else
-        {
+        else {
             System.out.println("Código HTTP: " + response.statusCode());
             System.out.println("Respuesta: " + response.body());
 
@@ -93,8 +86,7 @@ public class YgoApiClient
     {
         YgoApiClient api = new YgoApiClient();
 
-        try
-        {
+        try {
             Card carta = api.obtenerCartaAleatoria();
 
             System.out.println("Nombre: " + carta.getName());
@@ -102,8 +94,7 @@ public class YgoApiClient
             System.out.println("DEF: " + carta.getDef());
             System.out.println("Imagen: " + carta.getImageUrl());
         }
-        catch (IOException | InterruptedException e)
-        {
+        catch (IOException | InterruptedException e) {
             e.printStackTrace();
         }
     }
